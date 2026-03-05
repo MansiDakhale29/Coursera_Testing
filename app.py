@@ -144,12 +144,21 @@ def scrape_details(external_id: str) -> dict | None:
     )
 
     # Rating
+    rating = None
     rating_el = soup.select_one('[aria-roledescription="rating"] span[aria-hidden="true"]')
-    rating = float(rating_el.get_text(strip=True)) if rating_el else None
+    if rating_el:
+        try:
+            rating = float(rating_el.get_text(strip=True))
+        except (ValueError, TypeError):
+            pass
 
     # Review count
+    review_count = None
     review_match = re.search(r"([\d,]+)\s*reviews?", body_text, re.I)
-    review_count = int(review_match.group(1).replace(",", "")) if review_match else None
+    if review_match:
+        digits = review_match.group(1).replace(",", "").strip()
+        if digits.isdigit():
+            review_count = int(digits)
 
     # Level
     level = None
@@ -195,7 +204,9 @@ def scrape_details(external_id: str) -> dict | None:
     enrolled = None
     enrolled_match = re.search(r"([\d,]+)\s*(?:already\s*)?(?:enrolled|learners?)", body_text, re.I)
     if enrolled_match:
-        enrolled = int(enrolled_match.group(1).replace(",", ""))
+        digits = enrolled_match.group(1).replace(",", "").strip()
+        if digits.isdigit():
+            enrolled = int(digits)
 
     # Instructors
     instructors = []
