@@ -3,6 +3,8 @@ Coursera Course Scraper — Streamlit UI
 Deployed on Streamlit Cloud for easy testing.
 """
 
+from __future__ import annotations
+
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
@@ -467,7 +469,7 @@ with col1:
         label_visibility="collapsed",
     )
 with col2:
-    search_btn = st.button("🔍 Search", type="primary", width="stretch")
+    search_btn = st.button("🔍 Search", type="primary", use_container_width=True)
 
 if search_btn and query.strip():
     status_container = st.empty()
@@ -500,7 +502,7 @@ if search_btn and query.strip():
                 with cols[0]:
                     img = course.get("imageUrl")
                     if img:
-                        st.image(img, width="stretch")
+                        st.image(img, use_container_width=True)
                     else:
                         st.markdown("🖼️ *No image*")
 
